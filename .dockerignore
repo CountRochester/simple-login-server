@@ -1,0 +1,4 @@
+.git
+.DS_S*
+node_modules
+build
