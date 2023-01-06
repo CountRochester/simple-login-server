@@ -5,14 +5,19 @@ env.config()
 
 import './module-alias'
 import { dbClient, DbClient, initDb } from '@/store'
+import {
+  mainApi,
+  ApiServer
+} from '@/api'
 
 console.log('ok')
 
 const gracefulShutdown = async (
   db: DbClient,
+  api: ApiServer,
 ) => {
   await db.disconnect()
-  process.exit(0)
+  await api.stop()
 }
 
 const start = async () => {
@@ -22,12 +27,14 @@ const start = async () => {
     console.log('Initialize DB...')
     await initDb(dbClient)
 
-    console.log('Starting public API...');
+    console.log('Starting main API...')
+    await mainApi.ready()
+    await mainApi.start();
 
     ['exit', 'SIGINT', 'SIGTERM'].forEach(code => {
       process.on(code, async () => {
         console.log('Service is shutting down gracefully')
-        await gracefulShutdown(dbClient)
+        await gracefulShutdown(dbClient, mainApi)
       })
     })
   } catch (err) {

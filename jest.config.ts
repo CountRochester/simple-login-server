@@ -11,7 +11,6 @@ export default async (): Promise<Config> => ({
     '<rootDir>/unit.jest.config.ts',
     '<rootDir>/int.jest.config.ts'
   ],
-  setupFilesAfterEnv: ['<rootDir>/src/test/setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
